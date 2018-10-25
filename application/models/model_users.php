@@ -205,12 +205,16 @@
 			  return $query->result();
 		return array();
 	}
-	function get_my_complaint(){
+	function get_my_complaint()
+	{
 		$mobilenumber = $this->input->post('mobilenumber'); 
+
 		$this->db->select('*')
-		 ->from('complaint')
-		 ->where('mobilenumber',$mobilenumber)
-		 ->join('account', 'account.account_id = complaint.account_id');
+					->from('complaint')
+					->where('mobilenumber',$mobilenumber)
+					->order_by("c_id", "DESC")
+					->join('account', 'account.account_id = complaint.account_id');
+
 		 $query = $this->db->get();
 		 return $query->result();
 		// return array();

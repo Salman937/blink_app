@@ -11,16 +11,24 @@ class Admin extends CI_Controller
     }
     public function all_complaints()
     {
-        $all_comp = $this->db->count_all_results('complaint');
+        $account_id = $this->input->get('account_id');
+
+        $where = $this->common_model->getAllData('account','*',array('account_id' => $account_id));
+
+        $all_comp = $this->db->where('district_tma_slug', $where[0]->district_tma_slug)
+                             ->count_all_results('complaint');
 
         $completed = $this->db->where('status', 'completed')
+                              ->where('district_tma_slug', $where[0]->district_tma_slug)
                               ->count_all_results('complaint');
 
         $pending   = $this->db->where('status', 'pendingreview')
-                          ->count_all_results('complaint');
+                              ->where('district_tma_slug', $where[0]->district_tma_slug)
+                              ->count_all_results('complaint');
 
         $inprogress = $this->db->where("status","inprogress")
-                           ->count_all_results('complaint');
+                               ->where('district_tma_slug', $where[0]->district_tma_slug)
+                               ->count_all_results('complaint');
 
         // $completed = $this->db->where('status', 'completed')
                         //   ->count_all_results('complaint');

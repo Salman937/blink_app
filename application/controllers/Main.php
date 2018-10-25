@@ -79,6 +79,7 @@ class Main extends CI_Controller
 					$data['c_type'] = $this->input->post('c_type');
 					$data['district_slug'] = $this->input->post('district_slug');
 					$data['district_tma_slug'] = $this->input->post('district_tma_slug');
+					$data['created_at'] = date('Y-m-d');
 
 					$query = $this->db->insert('complaint', $data);
 
@@ -121,19 +122,19 @@ class Main extends CI_Controller
 			case 'list':
 				$view = "list";
 			//$data['multiListingData']	=	$this->model_users->get_all();
-				$data['multiListingData'] = $this->model_users->get_my_complaint();
+				$this->data['multiListingData'] = $this->model_users->get_my_complaint();
 
-				echo json_encode($data['multiListingData']);
+				echo json_encode($this->data['multiListingData']);
 				break;
 
 			default:
 				$view = "list";
 			// $data['multiListingData']	=	$this->model_users->get_all();
 			// echo '<pre>';print_r($data['multiListingData']);die;
-				$data['multiListingData'] = $this->model_users->select_all_rec("complaint");
+				$this->data['multiListingData'] = $this->model_users->select_all_rec("complaint");
 			//echo json_encode($data['multiListingData']);		
 				echo '<pre>';
-				echo print_r($data['multiListingData']);
+				echo print_r($this->data['multiListingData']);
 				break;
 
 		}
@@ -1078,7 +1079,6 @@ class Main extends CI_Controller
 		// $this->db->where('roll', 0);
 		if ($this->form_validation->run()) 
 		{
-			
 			$user_data = $this->common_model->getAllData('account', '*', array('mobilenumber' => $this->input->post('mobilenumber')));
 
 			if(!empty($user_data))
@@ -1086,6 +1086,16 @@ class Main extends CI_Controller
 				$update['token_id'] = $this->input->post('token_id');
 				$update['mobilenumber'] = $this->input->post('mobilenumber');
 				$this->model_users->doUpdateSingleRecord('account', 'mobilenumber', $this->input->post('mobilenumber'), $update);
+
+				$seven_days = date('Y-m-d', strtotime("+7 day"));
+
+				$where = array(
+								'created_at >='   => $seven_days
+							  );
+
+				$over_due_complaints = $this->common_model->getAllData('complaint','*',$where);
+
+				print_r($over_due_complaints);die;
 
 				$data = array(
 					'status' 	   => 'Success',
