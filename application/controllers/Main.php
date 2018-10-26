@@ -1076,36 +1076,96 @@ class Main extends CI_Controller
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('mobilenumber', 'Mobile', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('password', 'Password', 'required|sha1|trim');
+
 		// $this->db->where('roll', 0);
 		if ($this->form_validation->run()) 
 		{
-			$user_data = $this->common_model->getAllData('account', '*', array('mobilenumber' => $this->input->post('mobilenumber')));
+			$validate = array(
+								'mobilenumber' => $this->input->post('mobilenumber'),
+								'password'     => $this->input->post('password'),
+			);
+
+			$user_data = $this->common_model->getAllData('account', '*', $validate);
 
 			if(!empty($user_data))
 			{
 				$update['token_id'] = $this->input->post('token_id');
 				$update['mobilenumber'] = $this->input->post('mobilenumber');
 				$this->model_users->doUpdateSingleRecord('account', 'mobilenumber', $this->input->post('mobilenumber'), $update);
+				
+				$status= array('pendingreview', 'inprogress');
 
-				$seven_days = date('Y-m-d', strtotime("+7 day"));
+				$query = $this->db->select("*")
+									->from('complaint')
+									->or_where_in('status', $status)
+									->get()->result();
+				
+				$dates = array();	
 
-				$where = array(
-								'created_at >='   => $seven_days
-							  );
+				foreach($query as $new_query)
+				{
+					$expiry_date = $new_query->created_at;
+					
+					$expiry_date = new DateTime($expiry_date);
+					$today = new DateTime();
+					$interval = $today->diff($expiry_date);
+					$day = $interval->days;
+					
+					if($day > 7) 
+					{
+						$arr = array(
 
-				$over_due_complaints = $this->common_model->getAllData('complaint','*',$where);
+							'c_id' 				=> $new_query->c_id,
+							'district_slug' 	=> $new_query->district_slug,
+							'district_tma_slug' => $new_query->district_tma_slug,
+							'account_id' 		=> $new_query->account_id,
+							'c_number' 			=> $new_query->c_number,
+							'c_details' 		=> $new_query->c_details,
+							'image_path' 		=> $new_query->image_path,
+							'longitude' 		=> $new_query->longitude,
+							'latitude'		 	=> $new_query->latitude,
+							'bin_address' 		=> $new_query->bin_address, 
+							'c_date' 			=> $new_query->c_date,
+							'c_time' 			=> $new_query->c_time,
+							'c_date_time' 		=> $new_query->c_date_time,
+							'c_type' 			=> $new_query->c_type,
+							'status' 			=> $new_query->status,
+							'token_id' 			=> $new_query->token_id,
+							'created_at' 		=> $new_query->created_at,
+							'updated_at' 		=> $new_query->updated_at,
+						);
 
-				print_r($over_due_complaints);die;
+						array_push($dates, $arr);
+					}
+				}
+				// die;
+				$total_over_due = count($dates);
 
-				$data = array(
-					'status' 	   => 'Success',
-					'mobilenumber' => $this->input->post('mobilenumber'),
-					'is_logged_in' => 1,
-					'account_id'   => $user_data[0]->account_id,
-					'user_type'    => $user_data[0]->user_type,
-				);
-	
-				echo json_encode($data);
+				if ($user_data[0]->user_type == 'admin') 
+				{
+					$data = array(
+						'status' 	   => 'Success',
+						'mobilenumber' => $this->input->post('mobilenumber'),
+						'is_logged_in' => 1,
+						'account_id'   => $user_data[0]->account_id,
+						'user_type'    => $user_data[0]->user_type,
+						'over_due_list' => $dates,
+						'total_over_due' => $total_over_due
+					);
+		
+					echo json_encode($data);
+				} 
+				else {
+					$data = array(
+						'status' 	   => 'Success',
+						'mobilenumber' => $this->input->post('mobilenumber'),
+						'is_logged_in' => 1,
+						'account_id'   => $user_data[0]->account_id,
+						'user_type'    => $user_data[0]->user_type,
+					);
+		
+					echo json_encode($data);
+				}
 			}
 			else
 			{
@@ -1113,6 +1173,7 @@ class Main extends CI_Controller
 								'status' 	   => 'False',
 								'is_logged_in' => 0,
 							);
+				echo json_encode($data);
 			}
 
 		} else {
@@ -1123,7 +1184,6 @@ class Main extends CI_Controller
 			echo json_encode($data);
 			return false;
 		}
-
 	}
 
 	public function validate_credentials()
