@@ -262,7 +262,62 @@ class Admin extends CI_Controller
         );
 
         echo json_encode($Response);
-        
+    }
+
+    public function edit_copmplaint($id)
+    {
+        if (!empty($id)) 
+        {
+            $edit_data = $this->common_model->getAllData('complaint', '*',array('c_id' => $id));
+
+            $Response = array(
+                                'message' => 'complaint data',
+                                'status' => true,
+                                'complaint_data' => $edit_data,
+                            );
+
+            echo json_encode($Response);
+        } 
+        else {
+            $Response = array(
+                                'message' => '`This complaint is not found in database',
+                                'status' => false,
+                                'response_code' => 401,
+                            );
+
+            echo json_encode($Response);
+        }
+    }
+
+    public function update_copmplaint()
+    {
+        $complaint_id = $this->input->post('complaint_id');
+
+        if (!empty($complaint_id)) 
+        {
+            $data = array(
+                            'status' => $this->input->post('status')
+                         );
+
+            $edit_data = $this->common_model->UpdateDB('complaint',array('c_id' => $complaint_id),$data);
+
+            $Response = array(
+                                'message'        => 'complaint status updated',
+                                'status'         => true,
+                                'complaint_data' => $edit_data,
+                             );
+
+            echo json_encode($Response);
+        } 
+        else {
+            $Response = array(
+                                'message' => 'Complaint ID not Found',
+                                'status' => false,
+                                'response_code' => 401,
+                            );
+
+            echo json_encode($Response);
+        }
     }
 }
 
