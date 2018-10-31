@@ -8,6 +8,8 @@ class Admin extends CI_Controller
         parent::__construct();
         //Do your magic here
         $this->load->model('common_model');
+
+        // print_r($this->session->all_userdata());die;
     }
     public function all_complaints()
     {
@@ -291,23 +293,50 @@ class Admin extends CI_Controller
 
     public function update_copmplaint()
     {
-        $complaint_id = $this->input->post('complaint_id');
+        $complaint_number = $this->input->post('complaint_number');
 
-        if (!empty($complaint_id)) 
+        if (!empty($complaint_number)) 
         {
-            $data = array(
-                            'status' => $this->input->post('status')
-                         );
+            $check = $this->common_model->getAllData('complaint','*',array('c_number' => $complaint_number));
 
-            $edit_data = $this->common_model->UpdateDB('complaint',array('c_id' => $complaint_id),$data);
+            if (empty($check)) 
+            {
+                $Response = array(
+                                    'message'        => 'Complaint ID not found in our Records',
+                                    'status'         => false,
+                                    'response_code'  => 401,
+                                );
 
-            $Response = array(
-                                'message'        => 'complaint status updated',
-                                'status'         => true,
-                                'complaint_data' => $edit_data,
+                echo json_encode($Response);
+            } 
+            else 
+            {
+                $data = array(
+                                'status' => $this->input->post('status')
                              );
+    
+                $edit_data = $this->common_model->UpdateDB('complaint',array('c_number' => $complaint_number),$data);
 
-            echo json_encode($Response);
+                $new_data = array(
+                                'complaint_id'       => $this->input->post('complaint_number'),
+                                'complaint_response' => $this->input->post('message'),
+                                'response_status'    => $this->input->post('status'),
+                                'admin_id'           => $this->input->post('admin_id')
+
+                );
+
+                $this->db->insert('complaint_response',$new_data);
+    
+                $Response = array(
+                                    'message'        => 'complaint status updated',
+                                    'status'         => true,
+                                    'complaint_data' => $edit_data,
+                                 );
+    
+                echo json_encode($Response);
+            }
+            
+
         } 
         else {
             $Response = array(
@@ -318,6 +347,86 @@ class Admin extends CI_Controller
 
             echo json_encode($Response);
         }
+    }
+
+    public function complaint_types()
+    {
+        if($this->input->post())
+        {
+            $data['complaint_types'] = $this->input->post('complaint_type');
+            $data['expire_date'] = date('Y-m-d', strtotime($this->input->post('exiry_date')));
+            
+            $query = $this->db->insert('complaint_types', $data);
+            
+            if ($query) 
+            {
+                $this->session->set_flashdata('success', "Complaint Type Inserted Successfully"); 
+                redirect('Admin/complaint_types');
+            } 
+            else 
+            {
+                $this->session->set_flashdata('error', "Error!"); 
+                redirect('Admin/complaint_types');
+            }
+            
+        }
+        else
+        {
+            $this->data['active'] = 'compliant_type';
+            $this->data['types'] = $this->common_model->getAllData('complaint_types','*');
+
+            $this->load->view('template/header');
+			$this->load->view('admin/compliant_types',$this->data);
+			$this->load->view('template/footer-custom');
+        }
+    }
+
+    public function delete_complaint_type($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('complaint_types');
+
+        $this->session->set_flashdata('success', "Complaint Type Deleted Successfully"); 
+        redirect('Admin/complaint_types');
+    }
+
+    public function update_complaint_type($id=Null)
+    {
+        if($this->input->post())
+        {
+            $data['complaint_types'] = $this->input->post('complaint_type');
+            $data['expire_date'] = date('Y-m-d', strtotime($this->input->post('exiry_date')));
+            
+            $query = $this->common_model->UpdateDB('complaint_types',array('id' => $id),$data);
+            
+            if ($query) 
+            {
+                $this->session->set_flashdata('success', "Complaint Type Updated Successfully"); 
+                redirect('Admin/complaint_types');
+            } 
+            else 
+            {
+                $this->session->set_flashdata('error', "Error!"); 
+                redirect('Admin/complaint_types');
+            }
+            
+        }
+        else
+        {
+            $this->data['type'] = $this->common_model->getAllData('complaint_types','*',array('id' => $id));
+
+            $this->load->view('template/header');
+			$this->load->view('admin/update_complaint_type',$this->data);
+			$this->load->view('template/footer-custom');
+        }
+    }
+    public function responses($comp_no)
+    {
+        $this->data['responses'] = $this->common_model->getAllData('complaint_response','*',array('complaint_id' => $comp_no));
+
+        $this->load->view('template/header');
+        $this->load->view('admin/responses',$this->data);
+        $this->load->view('template/footer-custom');
     }
 }
 

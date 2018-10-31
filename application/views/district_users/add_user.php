@@ -69,7 +69,7 @@
                             <option value="">Select District</option>
 
                             <?php foreach ($districts as $district): ?>
-                              <option value="<?php echo $district->slug ?>"><?php echo $district->districts_categories ?></option>
+                              <option value="<?php echo $district->id ?>"><?php echo $district->districts_categories ?></option>
                             <?php endforeach ?> 
                           </select>
                           <?php echo '<span class="error">'. form_error('district').'</span>'; ?>
@@ -108,7 +108,6 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile Number</th>
-                                <th>District</th>
                                 <th>TMA Districts</th>
                             </tr>
                         </thead>
@@ -126,7 +125,6 @@
                                 <td><?php echo $user->fullname ?></td>
                                 <td><?php echo $user->emailad ?></td>
                                 <td><?php echo $user->mobilenumber ?></td>
-                                <td><?php echo $user->district ?></td>
                                 <td><?php echo $user->district_tma ?></td>
                             </tr>
 

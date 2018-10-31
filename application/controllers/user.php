@@ -94,24 +94,24 @@ class  user extends CI_Controller
 	 */
 	public function new_user()
 	{
-		$data['active']		=	'new_user';
+		$this->data['active']		=	'new_user';
 		
 		if($this->session->userdata('is_logged_in'))
 		{
-			$data['districts'] = $this->user_info->getAllData('districts','*',array('level' => 0));
+			$this->data['districts'] = $this->user_info->getAllData('districts','*',array('level' => 0));
 
 			$where = array(
-				'districts AS C' => 'A.account_id = C.id', 
+				'districts AS C' => 'A.district_tma_slug = C.slug', 
 			  );
 
-			$data['users'] = $this->user_info->DJoin('*,B.districts_categories AS district,C.districts_categories AS district_tma','account AS A','districts AS B','A.account_id = B.id',$where);
+			$this->data['users'] = $this->user_info->DJoin('*,B.districts_categories AS district,C.districts_categories AS district_tma','account AS A','districts AS B','A.district_tma_slug = B.slug',$where);
 
 			// echo"<pre>";
-			// print_r($data['users']);
+			// print_r($this->data['users']);
 			// die;
 
-			$this->load->view('template/header',$data);
-        	$this->load->view('district_users/add_user',$data);
+			$this->load->view('template/header',$this->data);
+        	$this->load->view('district_users/add_user',$this->data);
         	$this->load->view('template/footer-custom');
 	 	}
 	 	else
@@ -146,8 +146,8 @@ class  user extends CI_Controller
 							'mobilenumber'    => $this->input->post('mobile_no'),
 							'password' 	      => sha1($this->input->post('password')),
 							'roll' 		      => 0,
-							'district_id'     => $this->input->post('district_id'),
-							'district_tma_id' => $this->input->post('district_tma_id'),
+							'district_slug'     => $this->input->post('district_id'),
+							'district_tma_slug' => $this->input->post('district_tma_id'),
 						 );
 
 			$result = $this->user_info->InsertData('account',$data);

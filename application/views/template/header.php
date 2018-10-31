@@ -36,7 +36,7 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-<header class="main-header"> <a href="main/members" class="logo" style="background-color: #fe8800!important;" > <span class="logo-mini" >WSSP</span> <span class="logo-lg" style="background-color: #fe8800!important;"><b>Admin</b>WSSP</span> </a>
+<header class="main-header"> <a href="main/members" class="logo" style="background-color: #fe8800!important;" > <span class="logo-mini" >LG</span> <span class="logo-lg" style="background-color: #fe8800!important;"><i class="fa fa-circle" aria-hidden="true" style="color:green"></i> <?= $this->session->userdata('tma_district') ?></span> </a>
   <nav class="navbar navbar-static-top" style="background-color: #222d32 !important;"> <a href="main/members" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span> </a>
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
@@ -58,7 +58,7 @@
         <li class="dropdown user user-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="<?php echo base_url();?>assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> <span class="hidden-xs">WSSP</span> </a>
           <ul class="dropdown-menu">
             <li class="user-header"> <img src="<?php echo base_url();?>assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-              <p> ADMIN <small>WSSP</small> </p>
+              <p> Local Goverment </p>
             </li>
             <li class="user-footer">
               <!--<div class="pull-left"> <a href="<?php //echo base_url();?>main/logout" class="btn btn-default btn-flat">Profile</a> </div>-->

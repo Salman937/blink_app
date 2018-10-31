@@ -25,6 +25,9 @@ if(isset($active)) echo $active;
       <li class="<?=@$active=="index"?"active":"";?>"> 
       <a href="<?php echo base_url()."latLangControl/index"?>"> <i class="fa fa-map-marker" aria-hidden="true"></i> <span>Map</span>  </a> 
       </li>
+      <li class="<?=@$active=="compliant_type"?"active":"";?>"> 
+        <a href="<?php echo base_url()."Admin/complaint_types"?>"> <i class="fa fa-anchor" aria-hidden="true"></i><span>Compliant Types</span>  </a> 
+      </li>
       <?php 
       // $mobilenumber = $this->db->get_where('account', array('mobilenumber' => "03358018012"))->row();
       // //print_r($roll);die;

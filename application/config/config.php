@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/restapi/';
+$config['base_url']	= 'http://localhost/local_goverment/';
 //103.240.220.52
 define('FIREBASE_API_KEY', 'AAAAu0zKDc0:APA91bGDjVcwT85ooKMCda0oWwG4SQLzXyhqYeyfiStpXc_lzg8fuRqUIzZwoEvk7hce2x-jXu4vnYmt7kpparSsPPtpRYjsCrzsuihAdN_KPeiXsod9_2F1_ZPFjsRyaWfZzlE4c4XE');
 /*

@@ -8,7 +8,7 @@ class Main extends CI_Controller
 		parent::__construct();
 		error_reporting(E_ALL);
 		$this->load->model('user_info');
-		$this->load->model('model_users');
+		$this->load->model(array('model_users','common_model'));
 		//$this->load->library('Push');
 		$this->load->library('session');
 		date_default_timezone_set("Asia/Karachi");
@@ -148,7 +148,7 @@ class Main extends CI_Controller
 	{
 		if ($this->session->userdata('is_logged_in')) {
 			$data = '';
-		//$data['active']		=	'web_comp';
+		//$data['active'] = 'web_comp';
 
 			switch ($param1) {
 
@@ -182,17 +182,19 @@ class Main extends CI_Controller
 
 					$complaint = $this->model_users->get_single_account_complaint($param2);
 
-					$data['c_number'] = $complaint[0]->c_number;
-					$data['c_details'] = $complaint[0]->c_details;
-					$data['image_path'] = $complaint[0]->image_path;
-					$data['longitude'] = $complaint[0]->longitude;
-					$data['latitude'] = $complaint[0]->latitude;
-					$data['bin_address'] = $complaint[0]->bin_address;
-					$data['c_time'] = $complaint[0]->c_time;
-					$data['c_type'] = $complaint[0]->c_type;
-					$data['c_date'] = $complaint[0]->c_date;
-					$data['status'] = $complaint[0]->status;
-					$data['token_id'] = $complaint[0]->token_id;
+
+					$this->data['c_number'] = $complaint[0]->c_number;
+					$this->data['c_details'] = $complaint[0]->c_details;
+					$this->data['image_path'] = $complaint[0]->image_path;
+					$this->data['longitude'] = $complaint[0]->longitude;
+					$this->data['latitude'] = $complaint[0]->latitude;
+					$this->data['bin_address'] = $complaint[0]->bin_address;
+					$this->data['c_time'] = $complaint[0]->c_time;
+					$this->data['c_type'] = $complaint[0]->c_type;
+					$this->data['c_date'] = $complaint[0]->c_date;
+					$this->data['status'] = $complaint[0]->status;
+					$this->data['token_id'] = $complaint[0]->token_id;
+
 
 					if ($_POST) {
 
@@ -208,6 +210,13 @@ class Main extends CI_Controller
 						$data['c_date'] = date("Y-m-d");
 						$data['c_time'] = date("h:i:sa");
 						$data['c_type'] = $this->input->post('c_type');
+
+						$response_data['complaint_response'] = $this->input->post('response_message');
+						$response_data['complaint_id'] = $this->input->post('c_number');
+						$response_data['response_status'] = $this->input->post('status');
+						$response_data['admin_id'] = $this->session->userdata('mobilenumber');
+
+						$this->db->insert('complaint_response',$response_data);
 				    
 			// status
 
@@ -259,6 +268,7 @@ class Main extends CI_Controller
 						$Push->setMessage($data);
 						$Firebase->send($data['token_id'], $data['status']);
 						redirect('main/web_comp/list');
+
 					}
 					break;
 
@@ -578,6 +588,7 @@ class Main extends CI_Controller
 					break;
 
 			}
+
 			$this->load->view('template/header', $this->data);
 			$this->load->view('user/' . $view);
 			$this->load->view('template/footer-custom');
@@ -1093,79 +1104,13 @@ class Main extends CI_Controller
 				$update['mobilenumber'] = $this->input->post('mobilenumber');
 				$this->model_users->doUpdateSingleRecord('account', 'mobilenumber', $this->input->post('mobilenumber'), $update);
 				
-				$status= array('pendingreview', 'inprogress');
-
-				$query = $this->db->select("*")
-									->from('complaint')
-									->or_where_in('status', $status)
-									->get()->result();
-				
-				$dates = array();	
-
-				foreach($query as $new_query)
-				{
-					$expiry_date = $new_query->created_at;
-					
-					$expiry_date = new DateTime($expiry_date);
-					$today = new DateTime();
-					$interval = $today->diff($expiry_date);
-					$day = $interval->days;
-					
-					if($day > 7) 
-					{
-						$arr = array(
-
-							'c_id' 				=> $new_query->c_id,
-							'district_slug' 	=> $new_query->district_slug,
-							'district_tma_slug' => $new_query->district_tma_slug,
-							'account_id' 		=> $new_query->account_id,
-							'c_number' 			=> $new_query->c_number,
-							'c_details' 		=> $new_query->c_details,
-							'image_path' 		=> $new_query->image_path,
-							'longitude' 		=> $new_query->longitude,
-							'latitude'		 	=> $new_query->latitude,
-							'bin_address' 		=> $new_query->bin_address, 
-							'c_date' 			=> $new_query->c_date,
-							'c_time' 			=> $new_query->c_time,
-							'c_date_time' 		=> $new_query->c_date_time,
-							'c_type' 			=> $new_query->c_type,
-							'status' 			=> $new_query->status,
-							'token_id' 			=> $new_query->token_id,
-							'created_at' 		=> $new_query->created_at,
-							'updated_at' 		=> $new_query->updated_at,
-						);
-
-						array_push($dates, $arr);
-					}
-				}
-				// die;
-				$total_over_due = count($dates);
-
-				if ($user_data[0]->user_type == 'admin') 
-				{
 					$data = array(
 						'status' 	   => 'Success',
 						'mobilenumber' => $this->input->post('mobilenumber'),
 						'is_logged_in' => 1,
-						'account_id'   => $user_data[0]->account_id,
-						'user_type'    => $user_data[0]->user_type,
-						'over_due_list' => $dates,
-						'total_over_due' => $total_over_due
 					);
 		
 					echo json_encode($data);
-				} 
-				else {
-					$data = array(
-						'status' 	   => 'Success',
-						'mobilenumber' => $this->input->post('mobilenumber'),
-						'is_logged_in' => 1,
-						'account_id'   => $user_data[0]->account_id,
-						'user_type'    => $user_data[0]->user_type,
-					);
-		
-					echo json_encode($data);
-				}
 			}
 			else
 			{
@@ -1229,6 +1174,19 @@ class Main extends CI_Controller
 		} else {
 			$this->load->view('login');
 		}
+	}
+	public function complaint_types()
+	{
+		$get_comp_types = $this->common_model->getAllData('complaint_types','*');
+
+		$data = array(
+						'message'      => 'Complaint Types',
+						'status' 	   => true,
+						'response_code' => 200,
+						'data'	        => $get_comp_types
+					);
+
+		echo json_encode($data);
 	}
 
  // public function login_validation_admin(){

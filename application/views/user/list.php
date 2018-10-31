@@ -54,13 +54,13 @@
                   <td>
                   <script type="text/javascript">ga('send', 'event', 'select', 'Click', 'status');</script>
                    <?php if($row->status == 'pendingreview'){?>
-                    <span class="btn bg-olive  btn-flat margin"><?php echo 'Pending Review';?></span>
+                    <span class="btn bg-olive btn-xs btn-flat margin"><?php echo 'Pending Review';?></span>
                     <?php } else if($row->status == 'inprogress'){?>
-                    <span class="btn bg-purple   btn-flat margin"><?php echo 'In Progress';?></span>
+                    <span class="btn bg-purple btn-xs  btn-flat margin"><?php echo 'In Progress';?></span>
                     <?php }else if($row->status == 'completed'){?>
-                    <span class="btn bg-navy   btn-flat margin"><?php echo 'Completed';?></span>
+                    <span class="btn bg-navy btn-xs  btn-flat margin"><?php echo 'Completed';?></span>
                     <?php }else if($row->status == 'underreview'){?>
-                    <span class="btn bg-orange   btn-flat margin"><?php echo 'Under Review';?></span>
+                    <span class="btn bg-orange btn-xs  btn-flat margin"><?php echo 'Under Review';?></span>
                     <?php }?> 
                     <!-- <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                     <select class="" name="status">
@@ -76,10 +76,10 @@
                   <td>
                   <?php $data = $this->session->all_userdata();
                   if($data['mobilenumber'] == "03358018012") {?>
-                  <a onclick="return confirm('Are you sure you want to delete this?');" href="main/web_comp/delete/<?=$row->c_id?>" class="btn" style="background-color:#d73925; color: #fff;"><i class="fa fa-fw fa-close"></i></a>
+                  <a onclick="return confirm('Are you sure you want to delete this?');" href="main/web_comp/delete/<?=$row->c_id?>" class="btn btn-xs" style="background-color:#d73925; color: #fff;"><i class="fa fa-fw fa-close"></i></a>
                   <?php }?>
-                   <a href="main/web_comp/edit/<?=$row->c_id?>" class="btn" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a>
-                  
+                   <a href="main/web_comp/edit/<?=$row->c_id?>" class="btn btn-xs" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a>
+                   <a href="Admin/responses/<?=$row->c_number?>" class="btn btn-xs" style="background-color: #222d32;color: #fff;margin-top:5px "><i class="fa fa-fw fa-eye"></i></a>
 
                   </td>
                 </tr>

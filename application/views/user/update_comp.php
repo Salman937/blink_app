@@ -1,4 +1,4 @@
-<?php $this->load->view('template/menu')?>
+<?php $this->load->view('template/menu') ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -30,26 +30,26 @@
     <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 
     <div class="box-body">
-      <div class="col-md-6">
+      <div class="col-md-8">
        
        <div class="form-group">
           <label for="c_number" class="col-sm-5 control-label">Complaint Number</label>
           <div class="col-sm-7"> 
            
-<input type="text" class="form-control" readonly name="c_number" value="<?php echo $c_number?>" id="c_number" placeholder="Email" >
+<input type="text" class="form-control" readonly name="c_number" value="<?php echo $c_number ?>" id="c_number" placeholder="Email" >
           </div>
         </div>
         <div class="form-group">
           <label for="c_details" class="col-sm-5 control-label">Complaint Details</label>
           <div class="col-sm-7"> 
            
-            <textarea name="c_details" readonly class="form-control" ><?php echo $c_details?></textarea>
+            <textarea name="c_details" readonly class="form-control" ><?php echo $c_details ?></textarea>
           </div>
         </div>
         <div class="form-group">
           <label for="bin_address" class="col-sm-5 control-label">Complaint Location</label>
           <div class="col-sm-7">
-            <input type="text" readonly class="form-control" name="bin_address" value="<?php echo $bin_address?>" id="bin_address" placeholder="">
+            <input type="text" readonly class="form-control" name="bin_address" value="<?php echo $bin_address ?>" id="bin_address" placeholder="">
           </div>
         </div>
         
@@ -57,18 +57,18 @@
           <label for="image_path" class="col-sm-5 control-label">Image</label>
           <div class="col-sm-7">
             <input readonly type="file" name="image_path" readonly class="" value=""><br>
-            <img class="img-responsive" src="<?=$image_path?>"> </div>
+            <img class="img-responsive" src="<?= $image_path ?>"> </div>
         </div>
         <div class="form-group">
           <label for="latitude" class="col-sm-5 control-label">Latitude</label>
           <div class="col-sm-7">
-            <input type="text" name="latitude"  readonly class="form-control" id="latitude" value="<?php echo $latitude?>" >
+            <input type="text" name="latitude"  readonly class="form-control" id="latitude" value="<?php echo $latitude ?>" >
           </div>
         </div>
         <div class="form-group">
           <label for="longitude" class="col-sm-5 control-label">Longitude</label>
           <div class="col-sm-7">
-            <input type="text" readonly class="form-control" name="longitude" value="<?php echo $longitude?>" id="longitude" >
+            <input type="text" readonly class="form-control" name="longitude" value="<?php echo $longitude ?>" id="longitude" >
           </div>
         </div>
         <div class="form-group">
@@ -76,34 +76,93 @@
           <div class="col-sm-7">
             <select class="" name="status">
               <!-- <option value="">Please Select Option</option> -->
-              <option value="pendingreview" <?php if($status=='pendingreview')echo 'selected';?>>Pending Review</option>
-              <!-- <option value="underreview" <?php if($status=='underreview')echo 'selected';?>>Under Review</option> -->
-              <option value="inprogress" <?php if($status=='inprogress')echo 'selected';?>>In Progress</option>
-              <option value="completed" <?php if($status=='completed') echo 'selected';?>>Completed</option>
+              <option value="pendingreview" <?php if ($status == 'pendingreview') echo 'selected'; ?>>Pending Review</option>
+              <!-- <option value="underreview" <?php if ($status == 'underreview') echo 'selected'; ?>>Under Review</option> -->
+              <option value="inprogress" <?php if ($status == 'inprogress') echo 'selected'; ?>>In Progress</option>
+              <option value="completed" <?php if ($status == 'completed') echo 'selected'; ?>>Completed</option>
             </select>
           </div>
         </div>
         <div class="form-group">
           <label for="c_type" class="col-sm-5 control-label">Complaint Type</label>
           <div class="col-sm-7">
-            <input type="text" readonly class="form-control" name="c_type" value="<?php echo $c_type?>" id="Complaint Type" >
+            <input type="text" readonly class="form-control" name="c_type" value="<?php echo $c_type ?>" id="Complaint Type" >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="c_type" class="col-sm-5 control-label">Add Response Message</label>
+          <div class="col-sm-7">
+            <textarea name="response_message" class="form-control"></textarea>
           </div>
         </div>
         <input type="hidden" name="push_type" value="individual"/>
-       <input type="hidden" class="form-control" name="token_id" value="<?php if(isset($token_id)) echo $token_id?>" id="Token Id" >
-        <input type="hidden" class="form-control" name="c_number" value="<?php if(isset($c_number)) echo $c_number?>" id="Complaint Number" >
+       <input type="hidden" class="form-control" name="token_id" value="<?php if (isset($token_id)) echo $token_id ?>" id="Token Id" >
+        <input type="hidden" class="form-control" name="c_number" value="<?php if (isset($c_number)) echo $c_number ?>" id="Complaint Number" >
       </div>
     </div>
     <!-- /.box-body -->
     
     <div class="box-footer col-md-12">
       <div class="col-md-6">
-        <a href="<?php echo base_url();?>main/web_comp/list"type="submit" class="btn btn-danger">Cancel</a>
+        <!-- <a href="<?php echo base_url(); ?>main/web_comp/list"type="submit" class="btn btn-danger">Cancel</a> -->
         <button type="submit" class="btn btn-warning pull-right">Submit</button>
       </div>
     </div>
     <!-- /.box-footer -->
     </form>
+    
+    <!-- <table class="table">
+        <thead>
+          <tr class="active">
+            <th>
+              Status
+            </th>
+            <th>
+              Responses
+            </th>
+            <th>
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php if (empty($responses)) : ?> 
+          <tr>
+            <td>
+            <font color="red">Response No Available</font>
+            </td>
+          </tr>
+          <?php else : ?> 
+          
+          <?php foreach ($responses as $response) : ?>
+          <tr>
+            <td>
+              <?php echo $response->response_status ?>
+            </td>
+            <td>
+              <?php echo $response->complaint_response ?>
+            </td>
+            <td>
+              <a href="<?php bs() ?>Admin/response_delete/<?php echo $response->id ?>">
+                <button class="btn btn-danger btn-xs">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </a>
+              <a href="<?php bs() ?>Admin/edit_response/<?php echo $response->id ?>">
+                <button class="btn btn-success btn-xs">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+              </a>
+            </td>
+          </tr>
+          <?php endforeach; ?>
+
+          <?php endif; ?>
+        </tbody>
+      </table> -->
+      <br>
+      <br>
+      <br>
   </div>
   <!-- /.box --> 
 </div>
