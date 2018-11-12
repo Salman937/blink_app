@@ -49,7 +49,7 @@
                 <tr>
                   <td><?=$types->id?></td>
                   <td><?=$types->complaint_types?></td>
-                  <td><?= date('m-d-Y', strtotime($types->expire_date))?></td>
+                  <td><?= $types->expire_date ?></td>
                   <td>
                   <a href="<?= base_url() ?>Admin/update_complaint_type/<?= $types->id ?>">
                     <span class="btn bg-olive btn-xs update btn-flat margin" data-toggle="modal" data-target="#updatemodel"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
@@ -89,8 +89,19 @@
             <input type="text" class="form-control" name="complaint_type" id="complaint_type" placeholder="Enter Complaint Type" required>
           </div>
           <div class="form-group">
-            <label for="expiry_date">Expiry Date</label>
-            <input type="date" class="form-control" name="exiry_date" id="expiry_date" required>
+            <label for="expiry_date">Select Expiry Duration</label>
+            <select name="exiry_date" class="form-control" required>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">

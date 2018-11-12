@@ -87,7 +87,52 @@ class  user extends CI_Controller
 				echo "done";
 			}
 		}
+
+		function user_register()
+		{
+
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('name', 'Full Name', 'trim|required');
+			$this->form_validation->set_rules('phone', 'Mobile number', 'required');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[account.emailad]');
+			$this->form_validation->set_rules('address', 'Adress', 'trim|required|min_length[4]|max_length[32]');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|sha1');
 	
+			if($this->form_validation->run() == FALSE) 
+			{
+				$data=array(
+								'errors' => 'Please Review All Fields',   
+				);
+				echo json_encode($data);
+				die;
+			}
+			else 
+			{
+				$data = array (
+
+					'fullname' 		=> $this->input->post('name'),
+					'emailad' 		=> $this->input->post('email'),
+					'mobilenumber' 	=> $this->input->post('phone'),
+					'password' 		=> $this->input->post('password'),
+					'profile_image' => 'Null',
+					'token_id' 		=> 'Null',
+					'address'	 	=> $this->input->post('address'),
+					'user_type' 	=> 'user',
+				);
+				
+
+				$this->db->insert('account',$data);
+
+				$new_data = array(
+								'success' => 'User Registered Successfully',   
+						   );
+
+				echo json_encode($new_data);
+
+				die;
+			}
+		}
+
 	/**
 	 * [load add new user page]
 	 * @return [void]

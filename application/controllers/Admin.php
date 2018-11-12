@@ -222,35 +222,37 @@ class Admin extends CI_Controller
 
         $dates = array();
 
-        foreach ($query as $new_query) {
+        foreach ($query as $new_query) 
+        {
             $expiry_date = $new_query->created_at;
-
             $expiry_date = new DateTime($expiry_date);
             $today = new DateTime();
             $interval = $today->diff($expiry_date);
             $day = $interval->days;
 
-            if ($day > 7) {
-                $arr = array(
+            if ($day > 7) 
+            {
+                $arr = array
+                (
 
-                    'c_id' => $new_query->c_id,
-                    'district_slug' => $new_query->district_slug,
+                    'c_id'              => $new_query->c_id,
+                    'district_slug'     => $new_query->district_slug,
                     'district_tma_slug' => $new_query->district_tma_slug,
-                    'account_id' => $new_query->account_id,
-                    'c_number' => $new_query->c_number,
-                    'c_details' => $new_query->c_details,
-                    'image_path' => $new_query->image_path,
-                    'longitude' => $new_query->longitude,
-                    'latitude' => $new_query->latitude,
-                    'bin_address' => $new_query->bin_address,
-                    'c_date' => $new_query->c_date,
-                    'c_time' => $new_query->c_time,
-                    'c_date_time' => $new_query->c_date_time,
-                    'c_type' => $new_query->c_type,
-                    'status' => $new_query->status,
-                    'token_id' => $new_query->token_id,
-                    'created_at' => $new_query->created_at,
-                    'updated_at' => $new_query->updated_at,
+                    'account_id'        => $new_query->account_id,
+                    'c_number'          => $new_query->c_number,
+                    'c_details'         => $new_query->c_details,
+                    'image_path'        => $new_query->image_path,
+                    'longitude'         => $new_query->longitude,
+                    'latitude'          => $new_query->latitude,
+                    'bin_address'       => $new_query->bin_address,
+                    'c_date'            => $new_query->c_date,
+                    'c_time'            => $new_query->c_time,
+                    'c_date_time'       => $new_query->c_date_time,
+                    'c_type'            => $new_query->c_type,
+                    'status'            => $new_query->status,
+                    'token_id'          => $new_query->token_id,
+                    'created_at'        => $new_query->created_at,
+                    'updated_at'        => $new_query->updated_at,
                 );
 
                 array_push($dates, $arr);
@@ -354,7 +356,7 @@ class Admin extends CI_Controller
         if($this->input->post())
         {
             $data['complaint_types'] = $this->input->post('complaint_type');
-            $data['expire_date'] = date('Y-m-d', strtotime($this->input->post('exiry_date')));
+            $data['expire_date'] = $this->input->post('exiry_date');
             
             $query = $this->db->insert('complaint_types', $data);
             
@@ -395,7 +397,7 @@ class Admin extends CI_Controller
         if($this->input->post())
         {
             $data['complaint_types'] = $this->input->post('complaint_type');
-            $data['expire_date'] = date('Y-m-d', strtotime($this->input->post('exiry_date')));
+            $data['expire_date'] = $this->input->post('exiry_date');
             
             $query = $this->common_model->UpdateDB('complaint_types',array('id' => $id),$data);
             
