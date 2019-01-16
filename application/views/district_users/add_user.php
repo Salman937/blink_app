@@ -125,7 +125,7 @@
                                 <td><?php echo $user->fullname ?></td>
                                 <td><?php echo $user->emailad ?></td>
                                 <td><?php echo $user->mobilenumber ?></td>
-                                <td><?php echo $user->district_tma ?></td>
+                                <td><?php echo $user->district_tma_slug ?></td>
                             </tr>
 
                         <?php endforeach; ?>    

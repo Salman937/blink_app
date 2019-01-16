@@ -26,7 +26,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>User Name</th>
+                  <th>District</th>
                   <th>Complaint #</th>
                   <th>C-Details</th>
                   <th>Image</th>
@@ -42,7 +42,7 @@
               <?php if(isset($multiListingData)) foreach($multiListingData as $row){?>
                 <tr>
                   <td><?=$row->c_id?></td>
-                  <td><?php echo $this->model_users->get_user_name_by_id('account',$row->account_id); ?></td>
+                  <td><?php echo $row->district_slug  ?></td>
                   <td><?=$row->c_number?></td>
                   <td><?=$row->c_details?></td>
                  <td><img class="btn popup_image" style="width:100px; height:80px; border-radius:4px;" src="<?=$row->image_path?>"></img></td>
@@ -60,10 +60,11 @@
                     <?php }?>
                   </td>
                   <td>
-                  <?php $data = $this->session->all_userdata();
-                  if($data['mobilenumber'] == "03358018012") {?>
-                  <a onclick="return confirm('Are you sure you want to delete this?');" href="cdelete/<?=$row->c_id?>" class="btn" style="background-color:#d73925; color: #fff;"><i class="fa fa-fw fa-close"></i></a><?php }?>
-                    <a href="edit/<?=$row->c_id?>" class="btn" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a></td>
+                    <?php $data = $this->session->all_userdata();
+                    if($data['mobilenumber'] == "03358018012") {?>
+                    <a onclick="return confirm('Are you sure you want to delete this?');" href="cdelete/<?=$row->c_id?>" class="btn" style="background-color:#d73925; color: #fff;"><i class="fa fa-fw fa-close"></i></a><?php }?>
+                      <a href="main/web_comp/edit/<?=$row->c_id?>" class="btn" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a>
+                  </td>
                 </tr>
                 <?php }?>
               </tbody>

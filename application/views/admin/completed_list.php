@@ -60,7 +60,7 @@
                     <?php }?>
                   </td>
                   <td><a onclick="return confirm('Are you sure you want to delete this?');" href="cdelete/<?=$row->c_id?>" class="btn" style="background-color:#d73925; color: #fff;"><i class="fa fa-fw fa-close"></i></a>
-                    <a href="edit/<?=$row->c_id?>" class="btn" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a></td>
+                    <a href="main/web_comp/edit/<?=$row->c_id?>" class="btn" style="background-color: #222d32;color: #fff; "><i class="fa fa-fw fa-edit"></i></a></td>
                 </tr>
                 <?php }?>
               </tbody>

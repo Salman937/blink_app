@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminWSSP | Dashboard</title>
+  <title>Local Goverment | Dashboard</title>
   <base href="<?php echo base_url();?>">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap.min.css">
@@ -36,7 +36,15 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-<header class="main-header"> <a href="main/members" class="logo" style="background-color: #fe8800!important;" > <span class="logo-mini" >LG</span> <span class="logo-lg" style="background-color: #fe8800!important;"><i class="fa fa-circle" aria-hidden="true" style="color:green"></i> <?= $this->session->userdata('tma_district') ?></span> </a>
+<header class="main-header"> <a href="main/members" class="logo" style="background-color: #fe8800!important;" > <span class="logo-mini" >LG</span> <span class="logo-lg" style="background-color: #fe8800!important;"><i class="fa fa-circle" aria-hidden="true" style="color:green"></i> <?php
+                                                                if ($this->session->userdata('tma_district') == "peshawar-tma") {
+                                                                  echo "Local Council Board";
+                                                                }
+                                                                else {
+                                                                  echo $this->session->userdata('tma_district');
+                                                                }
+                                                                  ?>
+                                      </span> </a>
   <nav class="navbar navbar-static-top" style="background-color: #222d32 !important;"> <a href="main/members" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span> </a>
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
@@ -55,7 +63,7 @@
             <li class="footer"><a href="<?php //echo base_url()."main/web_comp/list"?>"">View all</a></li>
           </ul>
         </li> -->
-        <li class="dropdown user user-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="<?php echo base_url();?>assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> <span class="hidden-xs">WSSP</span> </a>
+        <li class="dropdown user user-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="<?php echo base_url();?>assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> <span class="hidden-xs">LG</span> </a>
           <ul class="dropdown-menu">
             <li class="user-header"> <img src="<?php echo base_url();?>assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
               <p> Local Goverment </p>

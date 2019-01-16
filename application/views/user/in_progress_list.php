@@ -26,7 +26,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>User Name</th>
+                  <th>District</th>
                   <th>Complaint #</th>
                   <th>C-Details</th>
                   <th>Image</th>
@@ -42,7 +42,7 @@
               <?php if(isset($multiListingData)) foreach($multiListingData as $row){?>
                 <tr>
                   <td><?=$row->c_id?></td>
-                  <td><?php echo $this->model_users->get_user_name_by_id('account',$row->account_id); ?></td>
+                  <td><?php echo $row->district_slug ?></td>
                   <td><?=$row->c_number?></td>
                   <td><?=$row->c_details?></td>
                   <td><img class="btn popup_image img-responsive " style="width:100px; height:80px; border-radius:4px;" src="<?=$row->image_path?>"></img></td>

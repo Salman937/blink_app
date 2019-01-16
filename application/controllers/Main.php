@@ -8,7 +8,7 @@ class Main extends CI_Controller
 		parent::__construct();
 		error_reporting(E_ALL);
 		$this->load->model('user_info');
-		$this->load->model(array('model_users','common_model'));
+		$this->load->model(array('model_users', 'common_model'));
 		//$this->load->library('Push');
 		$this->load->library('session');
 		date_default_timezone_set("Asia/Karachi");
@@ -33,7 +33,7 @@ class Main extends CI_Controller
 
 		if ($this->session->userdata('is_logged_in')) {
 
-			$this->load->view('template/header-custom', $data);
+			$this->load->view('template/header', $data);
 			$this->load->view('template/menu');
 			$this->load->view('members');
 			$this->load->view('template/footer-custom');
@@ -52,7 +52,6 @@ class Main extends CI_Controller
 	}
 	public function add_comp($param1 = null, $param2 = null)
 	{
-
 		$data = '';
 		switch ($param1) {
 
@@ -60,34 +59,37 @@ class Main extends CI_Controller
 				$view = 'add_comp';
 				if ($_POST) {
 					$increament = 1;
-					$data['c_number'] = $this->input->post('c_number');
-					$data['account_id'] = $this->input->post('account_id');
 
-					$data['c_details'] = $this->input->post('c_details');
+					$this->data['c_number'] = $this->input->post('c_number');
+
+					$this->data['account_id'] = $this->input->post('account_id');
+
+					$this->data['c_details'] = $this->input->post('c_details');
+
 					$decoded_string = base64_decode($this->input->post('image_path'));
-					$image_path = './uploads/map/' . $data['c_number'] . '.jpeg';
-					$data['image_path'] = $image_path;
+					$image_path = './uploads/map/' . $this->data['c_number'] . '.jpeg';
+					$this->data['image_path'] = $image_path;
 					file_put_contents($image_path, $decoded_string);
 
-					$data['longitude'] = $this->input->post('longitude');
-					$data['latitude'] = $this->input->post('latitude');
-					$data['bin_address'] = $this->input->post('bin_address');
-					$data['status'] = $this->input->post('status');
-					$data['c_date'] = date("Y-m-d");
-					$data['c_date_time'] = date("Y-m-d h:i:sa"); //$this->input->post('c_date_time');
-					$data['c_time'] = date("h:i:sa");
-					$data['c_type'] = $this->input->post('c_type');
-					$data['district_slug'] = $this->input->post('district_slug');
-					$data['district_tma_slug'] = $this->input->post('district_tma_slug');
-					$data['created_at'] = date('Y-m-d');
+					$this->data['longitude'] = $this->input->post('longitude');
+					$this->data['latitude'] = $this->input->post('latitude');
+					$this->data['bin_address'] = $this->input->post('bin_address');
+					$this->data['status'] = $this->input->post('status');
+					$this->data['c_date'] = date("Y-m-d");
+					$this->data['c_date_time'] = date("Y-m-d h:i:sa"); //$this->input->post('c_date_time');
+					$this->data['c_time'] = date("h:i:sa");
+					$this->data['c_type'] = $this->input->post('c_type');
+					$this->data['district_slug'] = $this->input->post('district_slug');
+					$this->data['district_tma_slug'] = $this->input->post('district_tma_slug');
+					$this->data['created_at'] = date('Y-m-d');
 
-					$query = $this->db->insert('complaint', $data);
+					$query = $this->db->insert('complaint', $this->data);
 
-					$data = array(
+					$this->data = array(
 						'status' => 'Successfully Registered!',
 					);
 					if ($query) {
-						echo json_encode($data);
+						echo json_encode($this->data);
 					} else {
 						echo json_encode("Complaint Faild");
 					}
@@ -198,25 +200,26 @@ class Main extends CI_Controller
 
 					if ($_POST) {
 
-						$data['c_number'] = $this->input->post('c_number');
-						$data['c_details'] = $this->input->post('c_details');
+						$this->data['c_number'] = $this->input->post('c_number');
+						$this->data['c_details'] = $this->input->post('c_details');
 						$upload_map_image = $this->model_users->upload('image_path');
 						if ($upload_map_image)
-							$data['image_path'] = $upload_map_image['upload_data']['file_name'];
-						$data['longitude'] = $this->input->post('longitude');
-						$data['latitude'] = $this->input->post('latitude');
-						$data['bin_address'] = $this->input->post('bin_address');
-						$data['status'] = $this->input->post('status');
-						$data['c_date'] = date("Y-m-d");
-						$data['c_time'] = date("h:i:sa");
-						$data['c_type'] = $this->input->post('c_type');
+						$this->data['image_path'] = $upload_map_image['upload_data']['file_name'];
+						$this->data['longitude'] = $this->input->post('longitude');
+						$this->data['latitude'] = $this->input->post('latitude');
+						$this->data['bin_address'] = $this->input->post('bin_address');
+						$this->data['status'] = $this->input->post('status');
+						$this->data['c_date'] = date("Y-m-d");
+						$this->data['c_time'] = date("h:i:sa");
+						$this->data['c_type'] = $this->input->post('c_type');
 
 						$response_data['complaint_response'] = $this->input->post('response_message');
 						$response_data['complaint_id'] = $this->input->post('c_number');
 						$response_data['response_status'] = $this->input->post('status');
 						$response_data['admin_id'] = $this->session->userdata('mobilenumber');
+						$response_data['created_at'] = date('Y-m-d');
 
-						$this->db->insert('complaint_response',$response_data);
+						$this->db->insert('complaint_response', $response_data);
 				    
 			// status
 
@@ -261,12 +264,12 @@ class Main extends CI_Controller
 							$response = $Firebase->send($regId, $json);
 						}
 						$data = array();
-						$data['status'] = $this->input->post('status');
-						$data['token_id'] = $complaint[0]->token_id;
+						$this->data['status'] = $this->input->post('status');
+						$this->data['token_id'] = $complaint[0]->token_id;
 
-						$this->model_users->doUpdateSingleRecord('complaint', 'c_id', $param2, $data);
-						$Push->setMessage($data);
-						$Firebase->send($data['token_id'], $data['status']);
+						$this->model_users->doUpdateSingleRecord('complaint', 'c_id', $param2, $this->data);
+						$Push->setMessage($this->data);
+						$Firebase->send($this->data['token_id'], $this->data['status']);
 						redirect('main/web_comp/list');
 
 					}
@@ -277,30 +280,30 @@ class Main extends CI_Controller
 
 					$complaint = $this->model_users->get_single_account_complaint($param2);
 
-					$data['c_number'] = $complaint[0]->c_number;
-					$data['c_details'] = $complaint[0]->c_details;
-					$data['image_path'] = $complaint[0]->image_path;
-					$data['longitude'] = $complaint[0]->longitude;
-					$data['latitude'] = $complaint[0]->latitude;
-					$data['bin_address'] = $complaint[0]->bin_address;
-					$data['c_time'] = $complaint[0]->c_time;
-					$data['c_type'] = $complaint[0]->c_type;
-					$data['c_date'] = $complaint[0]->c_date;
-					$data['status'] = $complaint[0]->status;
-					$data['token_id'] = $complaint[0]->token_id;
+					$this->data['c_number'] = $complaint[0]->c_number;
+					$this->data['c_details'] = $complaint[0]->c_details;
+					$this->data['image_path'] = $complaint[0]->image_path;
+					$this->data['longitude'] = $complaint[0]->longitude;
+					$this->data['latitude'] = $complaint[0]->latitude;
+					$this->data['bin_address'] = $complaint[0]->bin_address;
+					$this->data['c_time'] = $complaint[0]->c_time;
+					$this->data['c_type'] = $complaint[0]->c_type;
+					$this->data['c_date'] = $complaint[0]->c_date;
+					$this->data['status'] = $complaint[0]->status;
+					$this->data['token_id'] = $complaint[0]->token_id;
 					if ($_POST) {
-						$data['c_number'] = $this->input->post('c_number');
-						$data['c_details'] = $this->input->post('c_details');
+						$this->data['c_number'] = $this->input->post('c_number');
+						$this->data['c_details'] = $this->input->post('c_details');
 						$upload_map_image = $this->model_users->upload('image_path');
 						if ($upload_map_image)
-							$data['image_path'] = $upload_map_image['upload_data']['file_name'];
-						$data['longitude'] = $this->input->post('longitude');
-						$data['latitude'] = $this->input->post('latitude');
-						$data['bin_address'] = $this->input->post('bin_address');
-						$data['status'] = $this->input->post('status');
-						$data['c_date'] = date("Y-m-d");
-						$data['c_time'] = date("h:i:sa");
-						$data['c_type'] = $this->input->post('c_type');
+							$this->data['image_path'] = $upload_map_image['upload_data']['file_name'];
+						$this->data['longitude'] = $this->input->post('longitude');
+						$this->data['latitude'] = $this->input->post('latitude');
+						$this->data['bin_address'] = $this->input->post('bin_address');
+						$this->data['status'] = $this->input->post('status');
+						$this->data['c_date'] = date("Y-m-d");
+						$this->data['c_time'] = date("h:i:sa");
+						$this->data['c_type'] = $this->input->post('c_type');
 				 		
 			// idate(format)// 
 						$this->load->library('Push');
@@ -359,31 +362,31 @@ class Main extends CI_Controller
 
 					$complaint = $this->model_users->get_single_account_complaint($param2);
 
-					$data['c_number'] = $complaint[0]->c_number;
-					$data['c_details'] = $complaint[0]->c_details;
-					$data['image_path'] = $complaint[0]->image_path;
-					$data['longitude'] = $complaint[0]->longitude;
-					$data['latitude'] = $complaint[0]->latitude;
-					$data['bin_address'] = $complaint[0]->bin_address;
-					$data['c_time'] = $complaint[0]->c_time;
-					$data['c_type'] = $complaint[0]->c_type;
-					$data['c_date'] = $complaint[0]->c_date;
-					$data['status'] = $complaint[0]->status;
-					$data['token_id'] = $complaint[0]->token_id;
+					$this->data['c_number'] = $complaint[0]->c_number;
+					$this->data['c_details'] = $complaint[0]->c_details;
+					$this->data['image_path'] = $complaint[0]->image_path;
+					$this->data['longitude'] = $complaint[0]->longitude;
+					$this->data['latitude'] = $complaint[0]->latitude;
+					$this->data['bin_address'] = $complaint[0]->bin_address;
+					$this->data['c_time'] = $complaint[0]->c_time;
+					$this->data['c_type'] = $complaint[0]->c_type;
+					$this->data['c_date'] = $complaint[0]->c_date;
+					$this->data['status'] = $complaint[0]->status;
+					$this->data['token_id'] = $complaint[0]->token_id;
 					if ($_POST) {
 
-						$data['c_number'] = $this->input->post('c_number');
-						$data['c_details'] = $this->input->post('c_details');
+						$this->data['c_number'] = $this->input->post('c_number');
+						$this->data['c_details'] = $this->input->post('c_details');
 						$upload_map_image = $this->model_users->upload('image_path');
 						if ($upload_map_image)
-							$data['image_path'] = $upload_map_image['upload_data']['file_name'];
-						$data['longitude'] = $this->input->post('longitude');
-						$data['latitude'] = $this->input->post('latitude');
-						$data['bin_address'] = $this->input->post('bin_address');
-						$data['status'] = $this->input->post('status');
-						$data['c_date'] = date("Y-m-d");
-						$data['c_time'] = date("h:i:sa");
-						$data['c_type'] = $this->input->post('c_type');
+							$this->data['image_path'] = $upload_map_image['upload_data']['file_name'];
+						$this->data['longitude'] = $this->input->post('longitude');
+						$this->data['latitude'] = $this->input->post('latitude');
+						$this->data['bin_address'] = $this->input->post('bin_address');
+						$this->data['status'] = $this->input->post('status');
+						$this->data['c_date'] = date("Y-m-d");
+						$this->data['c_time'] = date("h:i:sa");
+						$this->data['c_type'] = $this->input->post('c_type');
 				 
 			// idate(format)// 
 						$this->load->library('Push');
@@ -569,6 +572,128 @@ class Main extends CI_Controller
 
 					break;
 
+				case 'over_due':
+
+					$view = "over_due_compliants";
+
+					$where_drainage = array(
+						'c_type' => 'Drainage',
+						'status !=' => 'completed',
+					);
+					$drainage_complaints = $this->common_model->getAllData("complaint", '*', $where_drainage);
+
+					$drainage_status = $this->common_model->getAllData("complaint_types", '*', array(
+						'complaint_types' => 'Drainage'
+					));
+
+					$dates = array();
+
+					foreach ($drainage_complaints as $drainage_complaint) {
+						$expiry_date = $drainage_complaint->created_at;
+
+						$expiry_date = new DateTime($expiry_date);
+						$today = new DateTime();
+						$interval = $today->diff($expiry_date);
+						$day = $interval->days;
+
+						if ($day > $drainage_status[0]->expire_date) {
+							$dates[] = $drainage_complaint;
+						}
+					}
+
+					$where_garbage = array(
+						'c_type' => 'Garbage',
+						'status !=' => 'completed',
+					);
+
+					$garbage_complaints = $this->common_model->getAllData("complaint", '*', $where_garbage);
+					$garbage_status = $this->common_model->getAllData("complaint_types", '*', array('complaint_types' => 'Garbage'));
+
+					foreach ($garbage_complaints as $garbage_complaint) {
+						$expiry_date = $garbage_complaint->created_at;
+
+						$expiry_date = new DateTime($expiry_date);
+						$today = new DateTime();
+						$interval = $today->diff($expiry_date);
+						$day = $interval->days;
+
+						if ($day > $garbage_status[0]->expire_date) {
+							$dates[] = $garbage_complaint;
+						}
+					}
+
+					$where_warter_supply = array(
+						'c_type' => 'Water Supply',
+						'status !=' => 'completed',
+					);
+
+					$water_supply_complaints = $this->common_model->getAllData("complaint", '*', $where_warter_supply);
+					$water_supply_status = $this->common_model->getAllData("complaint_types", '*', array('complaint_types' => 'Water Supply'));
+
+					foreach ($water_supply_complaints as $water_supply_complaint) {
+						$expiry_date = $water_supply_complaint->created_at;
+
+						$expiry_date = new DateTime($expiry_date);
+						$today = new DateTime();
+						$interval = $today->diff($expiry_date);
+						$day = $interval->days;
+
+						if ($day > $water_supply_status[0]->expire_date) {
+							$dates[] = $water_supply_complaint;
+						}
+					}
+
+					$where_trash_bin = array(
+						'c_type' => 'Trash Bin',
+						'status !=' => 'completed',
+					);
+
+					$trash_bin_complaints = $this->common_model->getAllData("complaint", '*', $where_trash_bin);
+					$trash_bin_status = $this->common_model->getAllData("complaint_types", '*', array('complaint_types' => 'Trash Bin'));
+
+					foreach ($trash_bin_complaints as $trash_bin_complaint) {
+						$expiry_date = $trash_bin_complaint->created_at;
+
+						$expiry_date = new DateTime($expiry_date);
+						$today = new DateTime();
+						$interval = $today->diff($expiry_date);
+						$day = $interval->days;
+
+						if ($day > $trash_bin_status[0]->expire_date) {
+							$dates[] = $trash_bin_complaint;
+						}
+					}
+
+					$where_other = array(
+						'c_type' => 'Other',
+						'status !=' => 'completed',
+					);
+
+					$other_complaints = $this->common_model->getAllData("complaint", '*', $where_other);
+					$other_status = $this->common_model->getAllData("complaint_types", '*', array('complaint_types' => 'Other'));
+
+					foreach ($other_complaints as $other_complaint) {
+						$expiry_date = $other_complaint->created_at;
+
+						$expiry_date = new DateTime($expiry_date);
+						$today = new DateTime();
+						$interval = $today->diff($expiry_date);
+						$day = $interval->days;
+
+						if ($day > $other_status[0]->expire_date) {
+							$dates[] = $other_complaint;
+						}
+					}
+
+					$this->data['multiListingData'] = $dates;
+
+					break;
+
+				case 'btw_complaints':
+					$view = "btw_complaints";
+					$this->data['multiListingData'] = array();
+					break;
+
 				case 'pending':
 					$view = "pending_list";
 					$this->data['multiListingData'] = $this->model_users->select_all_pending_list("complaint");
@@ -637,32 +762,32 @@ class Main extends CI_Controller
 
 					$complaint = $this->model_users->get_single_account_complaint($param2);
 
-					$data['c_number'] = $complaint[0]->c_number;
-					$data['c_details'] = $complaint[0]->c_details;
-					$data['image_path'] = $complaint[0]->image_path;
-					$data['longitude'] = $complaint[0]->longitude;
-					$data['latitude'] = $complaint[0]->latitude;
-					$data['bin_address'] = $complaint[0]->bin_address;
-					$data['c_time'] = $complaint[0]->c_time;
-					$data['c_type'] = $complaint[0]->c_type;
-					$data['c_date'] = $complaint[0]->c_date;
-					$data['status'] = $complaint[0]->status;
-					$data['token_id'] = $complaint[0]->token_id;
+					$this->data['c_number'] = $complaint[0]->c_number;
+					$this->data['c_details'] = $complaint[0]->c_details;
+					$this->data['image_path'] = $complaint[0]->image_path;
+					$this->data['longitude'] = $complaint[0]->longitude;
+					$this->data['latitude'] = $complaint[0]->latitude;
+					$this->data['bin_address'] = $complaint[0]->bin_address;
+					$this->data['c_time'] = $complaint[0]->c_time;
+					$this->data['c_type'] = $complaint[0]->c_type;
+					$this->data['c_date'] = $complaint[0]->c_date;
+					$this->data['status'] = $complaint[0]->status;
+					$this->data['token_id'] = $complaint[0]->token_id;
 
 					if ($_POST) {
 
-						$data['c_number'] = $this->input->post('c_number');
-						$data['c_details'] = $this->input->post('c_details');
+						$this->data['c_number'] = $this->input->post('c_number');
+						$this->data['c_details'] = $this->input->post('c_details');
 						$upload_map_image = $this->model_users->upload('image_path');
 						if ($upload_map_image)
-							$data['image_path'] = $upload_map_image['upload_data']['file_name'];
-						$data['longitude'] = $this->input->post('longitude');
-						$data['latitude'] = $this->input->post('latitude');
-						$data['bin_address'] = $this->input->post('bin_address');
-						$data['status'] = $this->input->post('status');
-						$data['c_date'] = date("Y-m-d");
-						$data['c_time'] = date("h:i:sa");
-						$data['c_type'] = $this->input->post('c_type');
+						$this->data['image_path'] = $upload_map_image['upload_data']['file_name'];
+						$this->data['longitude'] = $this->input->post('longitude');
+						$this->data['latitude'] = $this->input->post('latitude');
+						$this->data['bin_address'] = $this->input->post('bin_address');
+						$this->data['status'] = $this->input->post('status');
+						$this->data['c_date'] = date("Y-m-d");
+						$this->data['c_time'] = date("h:i:sa");
+						$this->data['c_type'] = $this->input->post('c_type');
 				    
 			// status
 
@@ -706,13 +831,13 @@ class Main extends CI_Controller
 							$regId = isset($_POST['token_id']) ? $_POST['token_id'] : '';
 							$response = $Firebase->send($regId, $json);
 						}
-						$data = array();
-						$data['status'] = $this->input->post('status');
-						$data['token_id'] = $complaint[0]->token_id;
+						$this->data = array();
+						$this->data['status'] = $this->input->post('status');
+						$this->data['token_id'] = $complaint[0]->token_id;
 
 						$this->model_users->doUpdateSingleRecord('complaint', 'c_id', $param2, $data);
-						$Push->setMessage($data);
-						$Firebase->send($data['token_id'], $data['status']);
+						$Push->setMessage($this->data);
+						$Firebase->send($this->data['token_id'], $this->data['status']);
 						redirect('main/admin_complaint/list');
 					}
 					break;
@@ -1089,35 +1214,34 @@ class Main extends CI_Controller
 		$this->form_validation->set_rules('password', 'Password', 'required|sha1|trim');
 
 		// $this->db->where('roll', 0);
-		if ($this->form_validation->run()) 
-		{
+		if ($this->form_validation->run()) {
 			$validate = array(
-								'mobilenumber' => $this->input->post('mobilenumber'),
-								'password'     => $this->input->post('password'),
+				'mobilenumber' => $this->input->post('mobilenumber'),
+				'password' => $this->input->post('password'),
 			);
 
 			$user_data = $this->common_model->getAllData('account', '*', $validate);
 
-			if(!empty($user_data))
-			{
+			if (!empty($user_data)) {
 				$update['token_id'] = $this->input->post('token_id');
 				$update['mobilenumber'] = $this->input->post('mobilenumber');
 				$this->model_users->doUpdateSingleRecord('account', 'mobilenumber', $this->input->post('mobilenumber'), $update);
-				
-					$data = array(
-						'status' 	   => 'Success',
-						'mobilenumber' => $this->input->post('mobilenumber'),
-						'is_logged_in' => 1,
-					);
-		
-					echo json_encode($data);
-			}
-			else
-			{
+
 				$data = array(
-								'status' 	   => 'False',
-								'is_logged_in' => 0,
-							);
+					'status' => 'Success',
+					'mobilenumber' => $this->input->post('mobilenumber'),
+					'is_logged_in' => 1,
+					'user_type' => $user_data[0]->user_type,
+					'account_id' => $user_data[0]->account_id,
+					'username' => $user_data[0]->fullname,
+				);
+
+				echo json_encode($data);
+			} else {
+				$data = array(
+					'status' => 'False',
+					'is_logged_in' => 0,
+				);
 				echo json_encode($data);
 			}
 
@@ -1156,7 +1280,9 @@ class Main extends CI_Controller
 			);
 
 			$user = $this->user_info->Authentication('account', $where);
-
+			// echo"<pre>";
+			// print_r($user);
+			// die;
 			$data = array(
 				'mobilenumber' => $this->input->post('mobilenumber'),
 				'is_logged_in' => 1,
@@ -1177,14 +1303,14 @@ class Main extends CI_Controller
 	}
 	public function complaint_types()
 	{
-		$get_comp_types = $this->common_model->getAllData('complaint_types','*');
+		$get_comp_types = $this->common_model->getAllData('complaint_types', '*');
 
 		$data = array(
-						'message'      => 'Complaint Types',
-						'status' 	   => true,
-						'response_code' => 200,
-						'data'	        => $get_comp_types
-					);
+			'message' => 'Complaint Types',
+			'status' => true,
+			'response_code' => 200,
+			'data' => $get_comp_types
+		);
 
 		echo json_encode($data);
 	}

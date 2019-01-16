@@ -89,11 +89,24 @@
 		}
 	}
 	function select_all_in_progress_list($table){
+		if ($this->session->userdata('tma_district') == 'peshawar-tma' ) 
+		{
+			$where = "";
+		} 
+		else 
+		{
+			$where = array( 
+							'complaint.district_tma_slug' => $this->session->userdata('tma_district'),
+						);
+		}
 			$this->db
 			->select("*")
 			->from($table)
 			->where("status","inprogress")
 			->order_by("c_id", "DESC");
+			if(!empty($where)):  
+				$this->db->where($where);
+			endif; 
 			$select_all_in_progress_list	=	$this->db->get();
 			if($select_all_in_progress_list->num_rows() > 0){
 				return $select_all_in_progress_list->result();
@@ -103,11 +116,25 @@
 		}
 	}
 	function select_all_pending_list($table){
+
+		if ($this->session->userdata('tma_district') == 'peshawar-tma' ) 
+		{
+			$where = "";
+		} 
+		else 
+		{
+			$where = array( 
+							'complaint.district_tma_slug' => $this->session->userdata('tma_district'),
+						);
+		}
 			$this->db
 			->select("*")
 			->from($table)
 			->where("status","pendingreview")
 			->order_by("c_id", "DESC");
+			if(!empty($where)):  
+				$this->db->where($where);
+			endif; 
 			$select_all_pending_list	=	$this->db->get();
 			if($select_all_pending_list->num_rows() > 0){
 				return $select_all_pending_list->result();
@@ -132,11 +159,24 @@
 	}
 	
 	function select_all_completed_list($table){
+		if ($this->session->userdata('tma_district') == 'peshawar-tma' ) 
+		{
+			$where = "";
+		} 
+		else 
+		{
+			$where = array( 
+							'complaint.district_tma_slug' => $this->session->userdata('tma_district'),
+						);
+		}
 			$this->db
 			->select("*")
 			->from($table)
 			->where("status","completed")
 			->order_by("c_id", "DESC");
+			if(!empty($where)):  
+				$this->db->where($where);
+			endif; 
 			$select_all_completed_list	=	$this->db->get();
 			if($select_all_completed_list->num_rows() > 0){
 				return $select_all_completed_list->result();
@@ -184,8 +224,8 @@
 		}
 		$this->db->select('*')
 				 ->from('complaint')
-				 ->order_by("c_id", "DESC")
-				 ->join('account', 'account.account_id = complaint.account_id');
+				 ->order_by("c_id", "DESC");
+				//  ->join('account', 'account.account_id = complaint.account_id');
 		if(!empty($where)):  
 			$this->db->where($where);
 		endif; 

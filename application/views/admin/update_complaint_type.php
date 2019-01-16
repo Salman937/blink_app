@@ -24,10 +24,15 @@
           <div class="box-body">
               <div class="row">
                   <div class="col-sm-8 col-sm-offset-2">
-                      <form method="post" action="<?= base_url() ?>Admin/update_complaint_type/<?= $type[0]->id ?>">
+                      <form method="post" action="<?= base_url() ?>Admin/update_complaint_type/<?= $type[0]->id ?>" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="complaint_type">Complaint Type</label>
                                 <input type="text" class="form-control" name="complaint_type" id="complaint_type" placeholder="Enter Complaint Type" required value="<?= $type[0]->complaint_types ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="complaint_type">Image</label>
+                                <input type="file" name="image" class="form-control">
+                                <input type="hidden" name="old_image" required value="<?= $type[0]->complaint_types ?>">
                             </div>
                             <div class="form-group">
                                 <label for="expiry_date">Expiry Date</label>

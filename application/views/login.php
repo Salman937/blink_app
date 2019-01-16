@@ -20,7 +20,7 @@
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-  <div class="login-logo"> <a href=""><b>Admin</b>WSSP</a> </div>
+  <div class="login-logo"> <a href=""><b>Local</b>Goverment</a> </div>
   <div class="login-box-body">
     <p class=" glyphicon glyphicon-user" style="     margin: 6px 130px 26px;
     font-size: 40px;"></p>

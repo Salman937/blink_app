@@ -7,6 +7,9 @@ class  user extends CI_Controller
 		$this->load->model('model_users');
 		$this->load->library('session');
 		$this->baseurl=dirname(dirname(base_url()));
+
+		// echo"<pre>";
+		// print_r($this->session->all_userdata());die;
 	}
 	  function members()
 	  {
@@ -90,7 +93,6 @@ class  user extends CI_Controller
 
 		function user_register()
 		{
-
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('name', 'Full Name', 'trim|required');
 			$this->form_validation->set_rules('phone', 'Mobile number', 'required');
@@ -101,7 +103,9 @@ class  user extends CI_Controller
 			if($this->form_validation->run() == FALSE) 
 			{
 				$data=array(
-								'errors' => 'Please Review All Fields',   
+							'success' => false,  
+							'response_code' => 401,  
+							'message' => 'Please Review All Fields',   
 				);
 				echo json_encode($data);
 				die;
@@ -124,7 +128,9 @@ class  user extends CI_Controller
 				$this->db->insert('account',$data);
 
 				$new_data = array(
-								'success' => 'User Registered Successfully',   
+								'success' => true,  
+								'response_code' => 200,  
+								'message' => 'User Registered Successfully',   
 						   );
 
 				echo json_encode($new_data);
@@ -183,14 +189,10 @@ class  user extends CI_Controller
 		else 
 		{
 			$data = array(
-							'zones_id'        => 0,
-							'nc_id'     	  => 0,
-							'uc_id'           => 0,
 							'fullname'        => $this->input->post('username'),
 							'emailad'         => $this->input->post('email'),
 							'mobilenumber'    => $this->input->post('mobile_no'),
 							'password' 	      => sha1($this->input->post('password')),
-							'roll' 		      => 0,
 							'district_slug'     => $this->input->post('district_id'),
 							'district_tma_slug' => $this->input->post('district_tma_id'),
 						 );

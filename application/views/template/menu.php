@@ -22,11 +22,26 @@ if(isset($active)) echo $active;
       <li class="<?=@$active=="web_comp/completed"?"active":"";?>"> 
       <a href="<?php echo base_url()."main/web_comp/completed"  ?>"> <i class="fa fa-check-circle" aria-hidden="true"></i> <span>Completed Complaints</span>  </a> 
       </li>
+      <li class="<?=@$active=="web_comp/over_due"?"active":"";?>"> 
+        <a href="<?php echo base_url()."main/web_comp/over_due"  ?>"> <i class="fa fa-list-alt" aria-hidden="true"></i> <span>Over Due Complaints</span>  </a> 
+      </li>
+      <li class="<?=@$active=="web_comp/btw_complaints"?"active":"";?>"> 
+        <a href="<?php echo base_url()."main/web_comp/btw_complaints"  ?>"> <i class="fa fa-retweet" aria-hidden="true"></i> <span>Complaints Between</span>  </a> 
+      </li>
+      <li class="<?=@$active=="web_comp/complaint_reports"?"active":"";?>"> 
+        <a href="<?php echo base_url()."Admin/complaint_reports"  ?>"> <i class="fa fa-retweet" aria-hidden="true"></i> <span>District Complaint Reports</span>  </a> 
+      </li>
       <li class="<?=@$active=="index"?"active":"";?>"> 
       <a href="<?php echo base_url()."latLangControl/index"?>"> <i class="fa fa-map-marker" aria-hidden="true"></i> <span>Map</span>  </a> 
       </li>
       <li class="<?=@$active=="compliant_type"?"active":"";?>"> 
         <a href="<?php echo base_url()."Admin/complaint_types"?>"> <i class="fa fa-anchor" aria-hidden="true"></i><span>Compliant Types</span>  </a> 
+      </li>
+      <li class="<?=@$active=="district"?"active":"";?>"> 
+        <a href="<?php echo base_url()."Districts/districts"?>"> <i class="fa fa-globe" aria-hidden="true"></i><span>Districts</span>  </a> 
+      </li>
+      <li class="<?=@$active=="tma-district"?"active":"";?>"> 
+        <a href="<?php echo base_url()."Districts/districts_tma"?>"> <i class="fa fa-globe" aria-hidden="true"></i><span>Districts TMA</span>  </a> 
       </li>
       <?php 
       // $mobilenumber = $this->db->get_where('account', array('mobilenumber' => "03358018012"))->row();
@@ -39,11 +54,16 @@ if(isset($active)) echo $active;
         </li>
       <?php }?>
         
+      <?php 
+
+      $data = $this->session->all_userdata();
+      if($data['tma_district'] == "peshawar-tma") {?>
       <li class="<?=@$active=="new_user"?"active":"";?>"> 
         <a href="<?php echo base_url()."user/new_user"?>"> 
           <i class="fa fa-users" aria-hidden="true"></i> <span>Users</span>  
         </a> 
       </li> 
+      <?php } ?>
 
     </ul>
   </section>
